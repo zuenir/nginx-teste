@@ -2,7 +2,7 @@ const request = require('supertest');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const app = require('../app'); // Importando o app do arquivo app.js
+const app = require('../server.js'); // Importando o app do arquivo app.js
 
 describe('Testes da aplicação Express', function(){
     it('Deve responder com status 200 na rota "/"', function(done){
