@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-const appName = process.env.APP_NAME
+const appName = process.env.APP_NAME || 'TestApp';  // Definir valor padrão caso o ambiente não esteja configurado
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
@@ -15,3 +15,5 @@ app.use('/', (req, res) => {
 app.listen(port, () => {
     console.log(`${appName} is listening on port ${port}`);
 });
+
+module.exports = app;  // Exportando a instância do app para ser usada nos testes
