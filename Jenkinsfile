@@ -20,5 +20,22 @@ pipeline {
                 '''
             }
         }
+
+        stage('Test'){
+            steps{
+                docker {
+                    image 'node:22.14.0'
+                    reuseNode true
+                }
+            }
+            steps{
+                sh '''
+                        ls -la
+                        node --version
+                        npm --version
+                        npm test
+                '''
+            }
+        }
     }
 }
