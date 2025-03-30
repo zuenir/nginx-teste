@@ -30,9 +30,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    ls -la
-                    node --version
-                    npm --version
+                    test -f dist/index.html
                     npm test
                 '''
             }
