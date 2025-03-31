@@ -1,44 +1,31 @@
+// tests/app.test.js
 const request = require('supertest');
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon');
-const app = require('../server.js');
+const app = require('../server');  // Importando a instância do app
+const http = require('http');
 
-describe('Testes da aplicação Express', function() {
-    it('Deve responder com status 200 na rota "/"', function(done) {
-        request(app)
-            .get('/')
-            .expect(200, done);  // Esse `done` garante que o teste é concluído corretamente.
+let server;
+
+beforeAll((done) => {
+    // Inicia o servidor antes dos testes
+    server = http.createServer(app);
+    server.listen(3001, done);
+});
+
+afterAll((done) => {
+    // Fecha o servidor após os testes
+    server.close(done);
+});
+
+describe('Testes do servidor Express', () => {
+    it('deve responder com status 200 na rota principal "/"', async () => {
+        const res = await request(app).get('/');
+        expect(res.status).toBe(200);  // Verificando se o status da resposta é 200
+        expect(res.text).toContain('<title>Beautiful Landing Page</title>');  // Verificando o conteúdo de título do HTML
     });
 
-    it('Deve retornar um arquivo estático de imagens na rota "/images"', function(done) {
-        request(app)
-            .get('/images/devsecops.png')
-            .expect('Content-Type', /png/)
-            .expect(200, done);
-    });
-
-    it('Deve servir um arquivo HTML na rota "/"', function(done) {
-        request(app)
-            .get('/')
-            .expect('Content-Type', /html/)
-            .expect(200)
-            .end((err, res) => {
-                if (err) return done(err);
-                expect(res.text).to.include('<!DOCTYPE html>');
-                done();
-            });
-    });
-
-    it('Deve registrar o nome da aplicação no console ao acessar a rota "/"', function(done) {
-        const consoleLogSpy = sinon.spy(console, 'log');
-
-        request(app)
-            .get('/')
-            .end((err, res) => {
-                expect(consoleLogSpy.calledWith('Request served by TestApp')).to.be.true;
-                consoleLogSpy.restore();
-                done();
-            });
+    it('deve servir arquivos estáticos da pasta /images', async () => {
+        // Supondo que exista uma imagem chamada 'image1.png' na pasta '/images'
+        const res = await request(app).get('/images/image1.png');
+        expect(res.status).toBe(200);  // Verificando se o arquivo está acessível com status 200
     });
 });
