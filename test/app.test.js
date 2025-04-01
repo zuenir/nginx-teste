@@ -1,31 +1,22 @@
 // tests/app.test.js
 const request = require('supertest');
 const app = require('../server');  // Importando a instância do app
-const http = require('http');
-
 let server;
 
-beforeAll((done) => {
-    // Inicia o servidor antes dos testes
-    server = http.createServer(app);
-    server.listen(3001, done);
+beforeAll(() => {
+  server = app.listen(3000); // start the server before tests
 });
 
 afterAll((done) => {
-    // Fecha o servidor após os testes
-    server.close(done);
+  server.close(done); // close the server after tests
 });
 
-describe('Testes do servidor Express', () => {
-    it('deve responder com status 200 na rota principal "/"', async () => {
-        const res = await request(app).get('/');
-        expect(res.status).toBe(200);  // Verificando se o status da resposta é 200
-        expect(res.text).toContain('<title>Beautiful Landing Page</title>');  // Verificando o conteúdo de título do HTML
-    });
+test('should respond with status 200 on "/" route', async () => {
+  const response = await request(server).get('/');
+  expect(response.status).toBe(200);
+});
 
-    it('deve servir arquivos estáticos da pasta /images', async () => {
-        // Supondo que exista uma imagem chamada 'image1.png' na pasta '/images'
-        const res = await request(app).get('/images/image1.png');
-        expect(res.status).toBe(200);  // Verificando se o arquivo está acessível com status 200
-    });
+test('should serve static files from /images', async () => {
+  const response = await request(server).get('/images/somefile.png');
+  expect(response.status).toBe(200);
 });

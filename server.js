@@ -12,8 +12,10 @@ app.use('/', (req, res) => {
     console.log(`Request served by ${appName}`);
 });
 
-app.listen(port, () => {
-    console.log(`${appName} is listening on port ${port}`);
-});
-
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`${appName} is listening on port ${port}`);
+    });
+  }
+  
 module.exports = app;  // Exportando a instância do app para ser usada nos testes
