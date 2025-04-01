@@ -21,6 +21,12 @@ pipeline {
             }
         }
         stage('Test'){
+            agent {
+                docker {
+                    image 'node:22.14.0'
+                    reuseNode true
+                }
+            }
             steps {
                echo 'Running tests'
                 sh '''
