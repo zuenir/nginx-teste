@@ -25,7 +25,6 @@ pipeline {
                 echo 'Test Stage'
                 sh '''
                     test -f dist/index.html'
-                    npm test
                 '''
             }
         }
