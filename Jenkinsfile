@@ -22,9 +22,10 @@ pipeline {
         }
         stage('Test'){
             steps {
-                echo 'Test Stage'
+               echo 'Running tests'
                 sh '''
-                    test -f dist/index.html'
+                    echo "Testing step"
+                    npm run test
                 '''
             }
         }
