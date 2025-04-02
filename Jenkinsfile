@@ -20,22 +20,40 @@ pipeline {
                 '''
             }
         }
-        stage('Test'){
-            agent {
-                docker {
-                    image 'node:22.14.0'
-                    reuseNode true
+    }
+
+    stage('Tests'){
+        parallel{
+            stage('Unit Tests'){
+                agent {
+                    docker {
+                        image 'node:22.14.0'
+                        reuseNode true
+                    }
+                }
+                steps {
+                    sh '''
+                        #test -f dist/index.html
+                        npm run test
+                    '''
                 }
             }
-            steps {
-               echo 'Running tests'
-                sh '''
-                    echo "Testing step"
-                    npm run test
-                '''
+            stage('E2E'){
+                agent {
+                    docker {
+                      image 'cypress/included:14.2.1'
+                      reuseNode true  
+                    }
+                }
+                steps{
+                    sh '''
+                        npm run test:2e2
+                    ''' 
+                }
             }
         }
     }
+
     post {
         always {
             junit 'test-results/junit.xml'

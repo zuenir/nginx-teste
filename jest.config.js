@@ -1,4 +1,6 @@
 module.exports={
+    testEnvironment: 'jest-environment-puppeteer',
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
     reporters:[
         "default",
         [
