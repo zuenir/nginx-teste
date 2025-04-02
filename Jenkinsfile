@@ -20,43 +20,63 @@ pipeline {
                 '''
             }
         }
-    }
 
-    stage('Tests'){
-        parallel{
-            stage('Unit Tests'){
-                agent {
-                    docker {
-                        image 'node:22.14.0'
-                        reuseNode true
+        stage('Tests'){
+            parallel{
+                stage('Unit Tests'){
+                    agent {
+                        docker {
+                            image 'node:22.14.0'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                            #test -f dist/index.html
+                            npm run test
+                        '''
+                    }
+                    post {
+                        always {
+                            junit 'test-results/junit.xml'
+                        }
                     }
                 }
-                steps {
-                    sh '''
-                        #test -f dist/index.html
-                        npm run test
-                    '''
-                }
-            }
-            stage('E2E'){
-                agent {
-                    docker {
-                      image 'cypress/included:14.2.1'
-                      reuseNode true  
+                stage('E2E'){
+                    agent {
+                        docker {
+                        image 'cypress/included:14.2.1'
+                        reuseNode true  
+                        }
                     }
-                }
-                steps{
-                    sh '''
-                        npm run test:2e2
-                    ''' 
+                    steps{
+                        sh '''
+                            npm run test:2e2
+                        ''' 
+                    }
+                    post {
+                        always {
+                            junit 'test-results/junit.xml'
+                        }
+                    }
                 }
             }
         }
-    }
 
-    post {
-        always {
-            junit 'test-results/junit.xml'
+         stage('Deploy') {
+            agent {
+                docker {
+                    image 'node:22.14.0'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm install netlify-cli -g
+                    netlify --version
+                '''
+            }
         }
     }
 }
+
