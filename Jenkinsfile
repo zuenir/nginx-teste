@@ -42,6 +42,14 @@ pipeline {
                         }
                     }
                 }
+                stage('Start Server') {
+                    steps {
+                        // Inicia o servidor em segundo plano
+                        sh 'npm start &'
+                        // Aguardar um pouco para garantir que o servidor tenha iniciado
+                        sh 'sleep 5'
+                    }
+                }
                 stage('E2E'){
                     agent {
                         docker {
@@ -58,6 +66,12 @@ pipeline {
                         always {
                             junit 'test-results/junit.xml'
                         }
+                    }
+                }
+                stage('Stop Server') {
+                    steps {
+                        // Desliga o servidor
+                        sh 'pkill -f "npm start"' // Encerra o processo iniciado
                     }
                 }
             }
