@@ -42,6 +42,7 @@ pipeline {
                         }
                     }
                 }
+                /*
                 stage('Start Server') {
                     steps {
                         // Inicia o servidor em segundo plano
@@ -73,7 +74,7 @@ pipeline {
                         // Desliga o servidor
                         sh 'pkill -f "npm start"' // Encerra o processo iniciado
                     }
-                }
+                }*/
             }
         }
 
