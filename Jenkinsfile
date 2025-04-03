@@ -33,7 +33,7 @@ pipeline {
                     steps {
                         sh '''
                             #test -f dist/index.html
-                            npm run test
+                            npm run test:jest
                         '''
                     }
                     post {
@@ -51,7 +51,7 @@ pipeline {
                     }
                     steps{
                         sh '''
-                            npm run test:2e2
+                            npm run test:cypress
                         ''' 
                     }
                     post {
@@ -72,11 +72,10 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install netlify-cli -g
-                    netlify --version
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
                 '''
             }
         }
     }
 }
-
