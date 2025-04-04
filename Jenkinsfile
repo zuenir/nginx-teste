@@ -8,7 +8,7 @@ pipeline {
     environment {
         NETLIFY_SITE_ID ='22266909-eb01-406d-b359-57407541046a'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-        NGROK_URL = '2674-129-122-174-226.ngrok-free.app'  // URL do seu túnel ngrok
+        NGROK_URL = '2674-129-122-174-226.ngrok-free.app' 
     }
 
     stages {
