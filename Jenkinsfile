@@ -8,6 +8,7 @@ pipeline {
     environment {
         NETLIFY_SITE_ID ='22266909-eb01-406d-b359-57407541046a'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        NGROK_URL = 'https://2674-129-122-174-226.ngrok-free.app'  // URL do seu túnel ngrok
     }
 
     stages {
@@ -19,6 +20,15 @@ pipeline {
                 }
             }
             steps {
+                script {
+                    // Configurar npm para usar o proxy ngrok
+                    sh '''
+                        npm config set proxy http://$NGROK_URL
+                        npm config set https-proxy https://$NGROK_URL
+                        npm config set fetch-timeout 60000   # Aumentar o tempo de timeout
+                        npm config set fetch-retries 5       # Número de tentativas em caso de falha de rede
+                    '''
+                }
                 sh '''
                     ls -la
                     node --version
@@ -54,7 +64,7 @@ pipeline {
             }
         }
 
-         stage('Deploy') {
+        stage('Deploy') {
             agent {
                 docker {
                     image 'node:22.14.0'
