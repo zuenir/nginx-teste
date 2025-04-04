@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-        githubPush(secret: 'mySuperSecretKey1234')  // Para GitHub
+        githubPush()  // Para GitHub
     }
 
     environment {
