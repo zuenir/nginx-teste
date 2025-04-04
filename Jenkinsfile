@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers  {
+        githubPush(secret: 'mySuperSecretKey1234')  // Para GitHub
+    }
+
     environment {
         NETLIFY_SITE_ID ='22266909-eb01-406d-b359-57407541046a'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
