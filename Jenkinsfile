@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    triggers  {
+    triggers {
         githubPush(secret: 'mySuperSecretKey1234')  // Para GitHub
     }
 
