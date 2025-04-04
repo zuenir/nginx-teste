@@ -23,7 +23,6 @@ pipeline {
                 script {
                     // Configurar npm para usar o proxy ngrok
                     sh '''
-                        npm config set proxy http://$NGROK_URL
                         npm config set https-proxy https://$NGROK_URL
                         npm config set fetch-timeout 60000   # Aumentar o tempo de timeout
                         npm config set fetch-retries 5       # Número de tentativas em caso de falha de rede
