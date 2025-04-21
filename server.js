@@ -11,7 +11,6 @@ app.use('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
     console.log(`Request served by ${appName}`);
 });
-
 if (require.main === module) {
     app.listen(port, () => {
         console.log(`${appName} is listening on port ${port}`);
