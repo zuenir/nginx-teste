@@ -114,20 +114,10 @@ pipeline {
 
     post {
         success {
-            slackSend (channel: '#ci-cd-alertas', color: 'good', message: "✅ *Build Sucesso* - Projeto `${env.JOB_NAME}` [#${env.BUILD_NUMBER}]\nURL: ${env.BUILD_URL}")slackSend (
-                color: '#36a64f',
-                message: "✅ *SUCESSO:* Pipeline finalizado com sucesso em `${env.JOB_NAME}` (<${env.BUILD_URL}|#${env.BUILD_NUMBER}>)",
-                channel: "${env.SLACK_CHANNEL}",
-                webhookUrl: "${env.SLACK_WEBHOOK}"
-            )
+        slackSend message: "✅ *Build Sucesso* - Projeto ${env.JOB_NAME} [#${env.BUILD_NUMBER}]\nURL: ${env.BUILD_URL}"
         }
         failure {
-            slackSend (channel: '#ci-cd-alertas', color: 'danger', message: "❌ *Build Falhou* - Projeto `${env.JOB_NAME}` [#${env.BUILD_NUMBER}]\nVeja o log: ${env.BUILD_URL}")slackSend (
-                color: '#ff0000',
-                message: "❌ *FALHA:* Algo deu errado em `${env.JOB_NAME}` (<${env.BUILD_URL}|#${env.BUILD_NUMBER}>)",
-                channel: "${env.SLACK_CHANNEL}",
-                webhookUrl: "${env.SLACK_WEBHOOK}"
-            )
+            slackSend message: "❌ *Build Falhou* - Projeto ${env.JOB_NAME} [#${env.BUILD_NUMBER}]\nVeja o log: ${env.BUILD_URL}"
         }
     }
 }
