@@ -74,14 +74,15 @@ pipeline {
         stage('Tag Release') {
             steps {
                 echo "🏷️ Criando TAG no Git..."
-                sh '''
-                    TAG_NAME="v$(date +%Y%m%d%H%M%S)"
-                    git config --global user.email "zuenirlima@gmail.com"
-                    git config --global user.name "zuenir"
-                    git tag $TAG_NAME
-                    git push origin $TAG_NAME
-                    echo "✅ TAG criada: $TAG_NAME"
-                '''
+                withCredentials([usernamePassword(credentialsId: 'githubtokenjenkins', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+                    sh '''
+                        TAG_NAME=v$(date +%Y%m%d%H%M%S)
+                        git config --global user.email "zuenirlima@gmail.com"
+                        git config --global user.name "zuenir"
+                        git tag ${TAG_NAME}
+                        git push https://${GIT_USER}:${GIT_TOKEN}@github.com/zuenir/nginx-teste.git ${TAG_NAME}
+                    '''
+                }
             }
         }
 
@@ -114,7 +115,13 @@ pipeline {
 
     post {
         success {
-        slackSend message: "✅ *Build Sucesso* - Projeto ${env.JOB_NAME} [#${env.BUILD_NUMBER}]\nURL: ${env.BUILD_URL}"
+            withCredentials([string(credentialsId: 'slack-webhook', variable: 'SLACK_WEBHOOK')]) {
+                sh '''
+                    curl -X POST -H 'Content-type: application/json' --data "{
+                        \\"text\\": \\"✅ *Build Sucesso* - ${env.JOB_NAME} [#${env.BUILD_NUMBER}]\\n${env.BUILD_URL}\\"
+                    }" $SLACK_WEBHOOK
+                '''
+            }
         }
         failure {
             slackSend message: "❌ *Build Falhou* - Projeto ${env.JOB_NAME} [#${env.BUILD_NUMBER}]\nVeja o log: ${env.BUILD_URL}"
