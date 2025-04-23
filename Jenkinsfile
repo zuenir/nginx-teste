@@ -94,7 +94,7 @@ pipeline {
                 }
             }
             steps {
-                echo "🚀 Iniciando deploy para Netlify..."
+                echo "🚀 Iniciando deploy para Netlify...."
                 sh '''
                     npm install netlify-cli
                     NETLIFY_VERSION=$(node_modules/.bin/netlify --version)
